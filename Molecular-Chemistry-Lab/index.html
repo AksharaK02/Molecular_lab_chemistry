@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Molecular Chemistry Lab — an interactive chemistry learning platform for molecular geometry, bonding, polarity and hybridization.">
+  <title>Molecular Chemistry Lab</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="particle-field" id="particleField" aria-hidden="true"></div>
+
+  <header class="site-header">
+    <a class="brand" href="#home" aria-label="Molecular Chemistry Lab home">
+      <span class="brand-icon">⚗</span>
+      <span>Molecular Lab</span>
+    </a>
+    <button class="menu-toggle" id="menuToggle" aria-label="Open navigation" aria-expanded="false">☰</button>
+    <nav class="navbar" id="navbar">
+      <a href="#home">Home</a><a href="#molecules">Molecules</a><a href="#vsepr">VSEPR</a>
+      <a href="#bonding">Bonding</a><a href="#polarity">Polarity</a><a href="#hybridization">Hybridization</a>
+      <a href="#periodic">Periodic Table</a><a href="#calculators">Calculators</a><a href="#quiz">Quiz</a>
+    </nav>
+    <div class="header-actions">
+      <button class="icon-btn" id="searchToggle" aria-label="Open search">⌕</button>
+      <button class="icon-btn" id="themeToggle" aria-label="Toggle theme">☾</button>
+    </div>
+  </header>
+
+  <div class="search-panel" id="searchPanel">
+    <div class="search-box">
+      <span>⌕</span>
+      <input id="globalSearch" type="search" placeholder="Search molecules, elements, geometries or concepts..." autocomplete="off">
+      <button id="closeSearch" aria-label="Close search">×</button>
+    </div>
+    <div id="searchResults" class="search-results"></div>
+  </div>
+
+  <main>
+    <section class="hero section" id="home">
+      <div class="hero-copy">
+        <span class="eyebrow">INTERACTIVE MOLECULAR SCIENCE PLATFORM</span>
+        <h1>Explore the <span>World of Molecules</span></h1>
+        <p class="hero-tagline">See the molecule. Understand the structure. Master the chemistry.</p>
+        <p class="hero-description">An interactive molecular chemistry laboratory for exploring molecular geometry, bonding, polarity, hybridization and chemical structures.</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="#molecules">⚗ Explore Molecules</a>
+          <a class="btn btn-secondary" href="#learn">▶ Start Learning</a>
+        </div>
+        <div class="hero-stats">
+          <div><strong>10+</strong><span>Molecules</span></div>
+          <div><strong>10</strong><span>VSEPR forms</span></div>
+          <div><strong>5</strong><span>Calculators</span></div>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <svg id="heroMolecule" viewBox="0 0 500 430" role="img" aria-label="Animated molecular illustration">
+          <defs>
+            <radialGradient id="heroGlow"><stop offset="0%" stop-color="#7dd3fc" stop-opacity=".45"/><stop offset="100%" stop-color="#7dd3fc" stop-opacity="0"/></radialGradient>
+            <filter id="glow"><feGaussianBlur stdDeviation="5" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+          </defs>
+          <circle cx="250" cy="210" r="170" fill="url(#heroGlow)"/>
+          <g class="orbit orbit-a"><ellipse cx="250" cy="210" rx="180" ry="68" fill="none" stroke="#38bdf8" stroke-opacity=".2"/></g>
+          <g class="orbit orbit-b"><ellipse cx="250" cy="210" rx="150" ry="92" fill="none" stroke="#a78bfa" stroke-opacity=".18"/></g>
+          <g class="hero-bonds">
+            <line x1="250" y1="210" x2="125" y2="135"/><line x1="250" y1="210" x2="385" y2="140"/>
+            <line x1="250" y1="210" x2="330" y2="335"/><line x1="250" y1="210" x2="165" y2="335"/>
+          </g>
+          <g filter="url(#glow)">
+            <circle class="hero-atom central" cx="250" cy="210" r="46"/><text x="250" y="218" text-anchor="middle">O</text>
+            <circle class="hero-atom" cx="125" cy="135" r="25"/><text x="125" y="142" text-anchor="middle">H</text>
+            <circle class="hero-atom" cx="385" cy="140" r="25"/><text x="385" y="147" text-anchor="middle">N</text>
+            <circle class="hero-atom" cx="330" cy="335" r="25"/><text x="330" y="342" text-anchor="middle">F</text>
+            <circle class="hero-atom" cx="165" cy="335" r="25"/><text x="165" y="342" text-anchor="middle">C</text>
+          </g>
+        </svg>
+        <div class="floating-chip chip-one">σ + π</div>
+        <div class="floating-chip chip-two">VSEPR</div>
+        <div class="floating-chip chip-three">109.5°</div>
+      </div>
+    </section>
+
+    <section class="section" id="molecules">
+      <div class="section-heading">
+        <span class="eyebrow">01 · MOLECULAR EXPLORATION</span>
+        <h2>🔬 Interactive Molecule Explorer</h2>
+        <p>Select a molecule and inspect its structure, geometry, bonding and polarity.</p>
+      </div>
+      <div class="explorer-grid">
+        <div class="visual-card molecule-stage">
+          <div class="card-toolbar">
+            <select id="moleculeSelect" aria-label="Select molecule"></select>
+            <div class="control-group">
+              <button class="mini-btn active" id="rotateBtn">↻ Rotate</button>
+              <button class="mini-btn" id="pauseBtn">Ⅱ Pause</button>
+              <button class="mini-btn" id="resetMolecule">↺ Reset</button>
+            </div>
+          </div>
+          <div class="molecule-canvas-wrap">
+            <svg id="moleculeSvg" viewBox="-250 -190 500 380" role="img" aria-label="Interactive molecule visualization"></svg>
+          </div>
+          <div class="zoom-controls">
+            <button class="mini-btn" id="zoomOut">−</button><span id="zoomValue">100%</span><button class="mini-btn" id="zoomIn">+</button>
+          </div>
+          <p class="interaction-hint">Drag the molecule • Hover atoms/bonds • Click for details</p>
+          <div id="atomInfo" class="atom-info" aria-live="polite"></div>
+        </div>
+        <aside class="info-card">
+          <div class="formula-display" id="formulaDisplay">H₂O</div>
+          <h3 id="moleculeName">Water</h3>
+          <p id="moleculeDescription">A bent polar molecule with oxygen as the central atom.</p>
+          <div class="data-grid" id="moleculeData"></div>
+          <div class="polarity-meter"><div class="meter-label"><span>Polarity</span><strong id="polarityText">Polar</strong></div><div class="meter"><span id="polarityBar"></span></div></div>
+        </aside>
+      </div>
+      <div class="molecule-cards" id="moleculeCards"></div>
+    </section>
+
+    <section class="section dark-section" id="vsepr">
+      <div class="section-heading">
+        <span class="eyebrow">02 · ELECTRON PAIR GEOMETRY</span>
+        <h2>🧬 VSEPR Geometry Visualizer</h2>
+        <p>Change bonding and lone pairs to see how electron pairs arrange themselves to minimize repulsion.</p>
+      </div>
+      <div class="vsepr-grid">
+        <div class="visual-card">
+          <div class="visualizer-header"><span class="status-dot"></span><span id="vseprStatus">Live geometry model</span></div>
+          <svg id="vseprSvg" viewBox="-220 -190 440 380" role="img" aria-label="VSEPR geometry visualization"></svg>
+          <p class="explanation" id="vseprExplanation">Electron pairs repel each other and arrange themselves to minimize repulsion.</p>
+        </div>
+        <div class="control-card">
+          <label>Bonding pairs <output id="bondingOutput">4</output></label>
+          <input id="bondingPairs" type="range" min="0" max="6" value="4">
+          <label>Lone pairs <output id="loneOutput">0</output></label>
+          <input id="lonePairs" type="range" min="0" max="3" value="0">
+          <div class="result-stack">
+            <div><span>Electron geometry</span><strong id="electronGeometry">Tetrahedral</strong></div>
+            <div><span>Molecular geometry</span><strong id="molecularGeometry">Tetrahedral</strong></div>
+            <div><span>Bond angle</span><strong id="vseprAngle">109.5°</strong></div>
+            <div><span>Example</span><strong id="vseprExample">CH₄</strong></div>
+            <div><span>Hybridization</span><strong id="vseprHybrid">sp³</strong></div>
+          </div>
+          <button class="btn btn-secondary full" id="resetVsepr">↺ Reset VSEPR</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="bonding">
+      <div class="section-heading">
+        <span class="eyebrow">03 · CHEMICAL BONDING</span>
+        <h2>⚛️ Chemical Bonding Lab</h2>
+        <p>Watch atoms approach and form single, double and triple bonds.</p>
+      </div>
+      <div class="bond-lab visual-card">
+        <div class="bond-tabs" id="bondTabs">
+          <button class="tab active" data-bond="single">Single Bond</button>
+          <button class="tab" data-bond="double">Double Bond</button>
+          <button class="tab" data-bond="triple">Triple Bond</button>
+          <button class="tab" data-bond="ionic">Ionic Bond</button>
+          <button class="tab" data-bond="covalent">Covalent</button>
+        </div>
+        <svg id="bondSvg" viewBox="-360 -150 720 300" aria-label="Chemical bond animation"></svg>
+        <div class="bond-result" id="bondResult"></div>
+        <button class="btn btn-primary" id="formBond">▶ Animate Bond Formation</button>
+      </div>
+    </section>
+
+    <section class="section" id="polarity">
+      <div class="section-heading">
+        <span class="eyebrow">04 · ELECTRONEGATIVITY</span>
+        <h2>⚡ Bond Polarity Lab</h2>
+        <p>Compare electronegativity and visualize the direction of electron-density shift.</p>
+      </div>
+      <div class="polarity-grid">
+        <div class="visual-card polarity-visual">
+          <div class="atom-selects">
+            <label>Atom 1<select id="atomOne"></select></label>
+            <label>Atom 2<select id="atomTwo"></select></label>
+          </div>
+          <svg id="polaritySvg" viewBox="-360 -130 720 260" aria-label="Animated bond polarity diagram"></svg>
+        </div>
+        <div class="info-card">
+          <div class="data-grid" id="polarityData"></div>
+          <p class="explanation" id="polarityExplanation"></p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section dark-section" id="hybridization">
+      <div class="section-heading">
+        <span class="eyebrow">05 · ORBITAL MIXING</span>
+        <h2>🧪 Hybridization Lab</h2>
+        <p>Explore how s and p orbitals combine into directional hybrid orbitals.</p>
+      </div>
+      <div class="hybrid-grid">
+        <div class="visual-card orbital-stage"><svg id="orbitalSvg" viewBox="-260 -180 520 360"></svg></div>
+        <div class="control-card">
+          <div class="hybrid-tabs"><button class="tab active" data-hybrid="sp">sp</button><button class="tab" data-hybrid="sp2">sp²</button><button class="tab" data-hybrid="sp3">sp³</button></div>
+          <div id="hybridInfo" class="result-stack"></div>
+          <p class="explanation">Conceptual model: s + p orbitals combine to form hybrid orbitals with characteristic orientations.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="molecularPolarity">
+      <div class="section-heading">
+        <span class="eyebrow">06 · DIPOLE ANALYSIS</span>
+        <h2>💧 Molecular Polarity</h2>
+        <p>See how individual bond dipoles combine—or cancel—to determine overall molecular polarity.</p>
+      </div>
+      <div class="comparison-selector">
+        <select id="polarityMoleculeSelect"></select>
+      </div>
+      <div class="visual-card molecular-polarity-card">
+        <svg id="molecularPolaritySvg" viewBox="-300 -180 600 360"></svg>
+        <div id="molecularPolarityInfo" class="data-grid"></div>
+      </div>
+    </section>
+
+    <section class="section dark-section" id="compare">
+      <div class="section-heading">
+        <span class="eyebrow">07 · SIDE-BY-SIDE ANALYSIS</span>
+        <h2>⚖️ Compare Molecules</h2>
+        <p>Choose two molecules and instantly highlight the important differences.</p>
+      </div>
+      <div class="compare-controls">
+        <select id="compareOne"></select><span>VS</span><select id="compareTwo"></select>
+      </div>
+      <div class="compare-grid" id="compareGrid"></div>
+    </section>
+
+    <section class="section" id="periodic">
+      <div class="section-heading">
+        <span class="eyebrow">08 · ELEMENT REFERENCE</span>
+        <h2>🧩 Interactive Periodic Table</h2>
+        <p>Explore element properties most useful for molecular chemistry.</p>
+      </div>
+      <div class="periodic-layout">
+        <div class="periodic-table" id="periodicTable"></div>
+        <div class="element-info info-card" id="elementInfo"></div>
+      </div>
+    </section>
+
+    <section class="section dark-section" id="reaction">
+      <div class="section-heading">
+        <span class="eyebrow">09 · CONCEPTUAL SIMULATION</span>
+        <h2>⚗️ Reaction Visualization</h2>
+        <p>Conceptually observe particles rearrange and compare exothermic and endothermic energy profiles.</p>
+      </div>
+      <div class="reaction-grid">
+        <div class="visual-card reaction-stage">
+          <div class="reaction-switch"><button class="tab active" data-reaction="exo">Exothermic</button><button class="tab" data-reaction="endo">Endothermic</button></div>
+          <svg id="reactionSvg" viewBox="-360 -150 720 300"></svg>
+          <button class="btn btn-primary" id="runReaction">▶ Run Conceptual Reaction</button>
+        </div>
+        <div class="visual-card energy-card">
+          <svg id="energySvg" viewBox="0 0 500 300" aria-label="Reaction energy diagram"></svg>
+          <div id="reactionDescription" class="explanation"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="calculators">
+      <div class="section-heading">
+        <span class="eyebrow">10 · CHEMISTRY TOOLKIT</span>
+        <h2>🧮 Chemistry Calculators</h2>
+        <p>Practice common chemistry calculations with immediate validation and formulas.</p>
+      </div>
+      <div class="calculator-grid">
+        <article class="calc-card"><h3>Molar Mass</h3><p>Mass of one mole from a chemical formula.</p><input id="massFormula" placeholder="e.g. H2O"><button class="btn btn-primary calc-btn" data-calc="mass">Calculate</button><div class="calc-result" id="massResult"></div></article>
+        <article class="calc-card"><h3>Moles</h3><p>n = mass / molar mass</p><input id="molesMass" type="number" min="0" placeholder="Mass (g)"><input id="molesMM" type="number" min="0" placeholder="Molar mass (g/mol)"><button class="btn btn-primary calc-btn" data-calc="moles">Calculate</button><div class="calc-result" id="molesResult"></div></article>
+        <article class="calc-card"><h3>Molarity</h3><p>M = moles / volume</p><input id="molarMoles" type="number" min="0" placeholder="Moles"><input id="molarVolume" type="number" min="0" placeholder="Volume (L)"><button class="btn btn-primary calc-btn" data-calc="molarity">Calculate</button><div class="calc-result" id="molarResult"></div></article>
+        <article class="calc-card"><h3>Density</h3><p>ρ = mass / volume</p><input id="densityMass" type="number" min="0" placeholder="Mass (g)"><input id="densityVolume" type="number" min="0" placeholder="Volume (mL)"><button class="btn btn-primary calc-btn" data-calc="density">Calculate</button><div class="calc-result" id="densityResult"></div></article>
+        <article class="calc-card"><h3>Percentage Composition</h3><p>% element = element mass / molar mass × 100</p><input id="compositionFormula" placeholder="e.g. H2O"><input id="compositionElement" placeholder="Element symbol, e.g. O"><button class="btn btn-primary calc-btn" data-calc="composition">Calculate</button><div class="calc-result" id="compositionResult"></div></article>
+      </div>
+    </section>
+
+    <section class="section dark-section" id="learn">
+      <div class="section-heading">
+        <span class="eyebrow">11 · LEARNING MODE</span>
+        <h2>📚 Learn Chemistry</h2>
+        <p>Concept → visualization → explanation → example → quick question.</p>
+      </div>
+      <div class="learning-grid" id="learningGrid"></div>
+    </section>
+
+    <section class="section" id="quiz">
+      <div class="section-heading">
+        <span class="eyebrow">12 · KNOWLEDGE CHECK</span>
+        <h2>🧠 Chemistry Challenge</h2>
+        <p>Test molecular geometry, VSEPR, bonding, polarity, hybridization and electronegativity.</p>
+      </div>
+      <div class="quiz-layout">
+        <div class="quiz-card">
+          <div class="quiz-top"><span id="quizCategory">Molecular Geometry</span><span id="quizCounter">1 / 8</span></div>
+          <div class="progress"><span id="quizProgress"></span></div>
+          <h3 id="quizQuestion"></h3>
+          <div class="quiz-options" id="quizOptions"></div>
+          <div id="quizFeedback" class="quiz-feedback"></div>
+          <button class="btn btn-primary" id="nextQuestion" disabled>Next Question →</button>
+        </div>
+        <aside class="score-card">
+          <div class="score-ring"><span id="scoreValue">0%</span></div>
+          <div><span>Score</span><strong id="scoreText">0 / 0</strong></div>
+          <div><span>Accuracy</span><strong id="accuracyText">0%</strong></div>
+          <div><span>Completed</span><strong id="completedText">0</strong></div>
+          <button class="btn btn-secondary full" id="restartQuiz">↻ Try Again</button>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section dark-section" id="progressSection">
+      <div class="section-heading">
+        <span class="eyebrow">13 · YOUR LAB JOURNEY</span>
+        <h2>📊 My Learning Progress</h2>
+        <p>Your exploration progress is stored locally in this browser—no login required.</p>
+      </div>
+      <div class="progress-cards">
+        <div class="progress-card"><span>🔬</span><strong id="progressMolecules">0</strong><small>Molecules Explored</small></div>
+        <div class="progress-card"><span>📚</span><strong id="progressConcepts">0/7</strong><small>Concepts Completed</small></div>
+        <div class="progress-card"><span>🧠</span><strong id="progressQuiz">0%</strong><small>Quiz Accuracy</small></div>
+        <div class="progress-card"><span>🚀</span><strong id="progressOverall">0%</strong><small>Learning Progress</small></div>
+      </div>
+      <div class="overall-progress"><span id="overallProgressBar"></span></div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div><a class="brand" href="#home"><span class="brand-icon">⚗</span><span>Molecular Chemistry Lab</span></a><p>See the molecule. Understand the structure. Master the chemistry.</p></div>
+    <div class="footer-links"><a href="#molecules">Molecules</a><a href="#vsepr">VSEPR</a><a href="#bonding">Bonding</a><a href="#polarity">Polarity</a><a href="#hybridization">Hybridization</a><a href="#calculators">Calculators</a><a href="#quiz">Quiz</a></div>
+    <p class="footer-note">Built as an interactive educational chemistry platform.</p>
+  </footer>
+
+  <script src="js/molecules.js"></script>
+  <script src="js/vsepr.js"></script>
+  <script src="js/calculator.js"></script>
+  <script src="js/quiz.js"></script>
+  <script src="js/script.js"></script>
+</body>
+</html>
